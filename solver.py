@@ -343,46 +343,6 @@ def cut_both(G, shortest, d, p, k, c):
     return nodes, edges, shortest, d, p
         
 
-def mincut_solve(G):
-    pass
-
-#idea: greedy heuristics: remove the lightest nodes on the 
-# the shortest path, that don't disconnect G until gone, 
-# then remove edges. If not all c is used up, after edges
-# are removed, check if more nodes can be deleted
-# more intelligent heuristics, check if there are very heavy edges
-# on a node, like 80+ heavy, and only delete if there are no very
-# heavy edges
-# Can we brute force solve the small graphs?
-# Do complete graphs have special properties to exploit? (since
-# I'm pretty sure everybody generated their big graphs using complete
-# ones lol)
-# More advanced heuristics: measuring the shortest path v from s to v
-# and t to v, and then trying to find the lightest edges in either
-# side and deleting them/maximize distance on two ends
-# snip bridges on circular graphs
-
-#observations: optimal edges removed between different values of k 
-# seem largely unrelated
-# for very connected graphs (maybe take degree into account)
-# it seems best work backwards and force the path into a long
-# one
-# observations: the best nodes to remove seem to have an edge
-# that needs removal
-# there's the game tree alpha-beta pruning approach? since 
-# it seems you can union together results cohesively
-# special case: circular graphs, just snip connection between start and end
-
-#heuristic of 0.001 will guarantee correct answer
-def LPA_star(G):
-    pass
-
-#Possibly greediness? We know the minimum path is 
-#the one that MUST be modified otherwise no change
-
-#preprocess? That is if there s or t are degree one, cut them
-# in a preprocess? !!!!!!!!!!!!
-
 
 def solve(G):
     #small k = 15, c = 1
@@ -416,13 +376,15 @@ if __name__ == '__main__':
 # For testing a folder of inputs to create a folder of outputs, you can use glob (need to import it)
 
 if __name__ == '__main__':
-    inputs = glob.glob('inputs/large/*')
-    for input_path in inputs:
-        output_path = 'outputs/large/' + basename(normpath(input_path))[:-3] + '.out'
-        G = read_input_file(input_path)
-        G_solve = G.copy()
-        c, k = solve(G_solve)
-        assert is_valid_solution(G, c, k)
-        distance = calculate_score(G, c, k)
-        write_output_file(G, c, k, output_path)
+    folders = ['small', 'medium', 'large']
+    for f in folders:
+        inputs = glob.glob('inputs/' + f + '/*', recursive=True)
+        for input_path in inputs:
+            output_path = 'outputs/' + f + '/' + basename(normpath(input_path))[:-3] + '.out'
+            G = read_input_file(input_path)
+            G_solve = G.copy()
+            c, k = solve(G_solve)
+            assert is_valid_solution(G, c, k)
+            distance = calculate_score(G, c, k)
+            write_output_file(G, c, k, output_path)
 
